@@ -6,3 +6,9 @@ Cheers🥂
 
 Working list of used libraries:
 spotipy
+
+Procedure for authorizing this program:
+Set local variables using these commands:
+     export SPOTIPY_CLIENT_ID=(your spotipy client id)
+     export SPOTIPY_CLIENT_SECRET=(your spotipy client secret)
+These will set environment variables in your shell and allow you to run the program without explicitly typing your keys

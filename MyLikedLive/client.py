@@ -19,3 +19,7 @@ for item in query_results['items']:
         unique_artists.add(artist['name'])
 
 print(unique_artists)
+
+#TODO: use list of artists to search ticketing websites
+#TODO: make a nicer-looking interface, or at least more responsive
+#TODO: figure out how to do user-end logins instead of whatever is going on here
