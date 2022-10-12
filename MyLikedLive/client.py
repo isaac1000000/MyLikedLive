@@ -9,7 +9,7 @@ scope = "user-read-recently-played"
 redirect_uri = "https://google.com"
 
 # Creates a spotipy instance with the determined scope
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
+sp = spotipy.Spotify(auth_manager=SpotifyOAuth(redirect_uri=redirect_uri, scope=scope))
 
 # Creates a set of the unique artists in the user's recently played
 query_results = sp.current_user_recently_played()
@@ -18,7 +18,9 @@ for item in query_results['items']:
     for artist in item['track']['artists']:
         unique_artists.add(artist['name'])
 
-print(unique_artists)
+print("Lately, you've been listening to: ")
+print(", ".join(unique_artists))
+
 
 #TODO: use list of artists to search ticketing websites
 #TODO: make a nicer-looking interface, or at least more responsive
