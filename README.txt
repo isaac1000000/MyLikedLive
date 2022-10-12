@@ -8,6 +8,7 @@ Working list of used libraries:
 spotipy
 
 Procedure for using this program:
+Get an api key for Spotify and TicketMaster
 Set local variables using these commands:
      export SPOTIPY_CLIENT_ID=(your spotipy client id)
      export SPOTIPY_CLIENT_SECRET=(your spotipy client secret)
@@ -15,4 +16,3 @@ Set local variables using these commands:
 Choose your local market:
      In resources/dmaIDs.csv, find an appropriate local market
      Change the value in MyLikedLive/loc.txt to the number listed (default NYC)
-These will set environment variables in your shell and allow you to run the program without hardcoding your keys
