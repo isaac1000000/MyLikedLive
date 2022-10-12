@@ -10,12 +10,12 @@ class ConcertLocator:
     with open("loc.txt", 'r') as l:
         location = l.read()
 
-#TODO: Figure out why ticketmaster api is returning a 401 error code
+#TODO: Error handling on request
 #TODO: Filter out irrelevant (far) concerts
 #TODO: Find best practice for returning and working with results
     def __getRelevantConcerts(self):
-        data = requests.get(self.url)
-        print(data)
+        data = requests.get(self.url).json()
+
 
     # Basic constructor, creates URL for later use in webscraping
     def __init__(self, artist):
@@ -23,8 +23,7 @@ class ConcertLocator:
         self.url = ("https://app.ticketmaster.com/discovery/v2/events.json?"
         "classificationName=music&" # Narrows to concerts
         "dmaId=324&" # Artist
-        "apikey={{{tmapi}}}").format(tmapi=os.getenv("TICKETMASTER_API_KEY")) # authorizes
-        print(os.getenv("TICKETMASTER_API_KEY"))
+        "apikey={tmapi}").format(tmapi=os.getenv("TICKETMASTER_API_KEY")) # authorizes
         self.__getRelevantConcerts()
 
 cl1 =  ConcertLocator("Men I Trust")

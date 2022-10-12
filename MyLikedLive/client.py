@@ -9,6 +9,7 @@ scope = "user-read-recently-played"
 redirect_uri = "https://google.com"
 
 # Creates a spotipy instance with the determined scope
+# Spotify object grabs SPOTIPY_CLIENT_ID and SPOTIPY_CLIENT_SECRET from environment
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(redirect_uri=redirect_uri, scope=scope))
 
 # Creates a set of the unique artists in the user's recently played
