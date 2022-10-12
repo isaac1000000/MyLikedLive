@@ -3,6 +3,7 @@
 
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+from concert_locator import ConcertLocator
 
 # This scope allows for reading of recently listened
 scope = "user-read-recently-played"
@@ -19,8 +20,17 @@ for item in query_results['items']:
     for artist in item['track']['artists']:
         unique_artists.add(artist['name'])
 
+# Print all recent unique artists
 print("Lately, you've been listening to: ")
 print(", ".join(unique_artists))
+
+# Iterates through artists then their concerts to give readable return
+for artist in unique_artists:
+    concerts = ConcertLocator(artist)
+    if concerts.relevant_concerts:
+        for concert in concerts.relevant_concerts:
+            result_string = "{name} is playing at {venue} on {date}".format(name=concert["name"], venue=concert["venue"], date=concert["date"])
+            print(result_string)
 
 
 #TODO: use list of artists to search ticketing websites

@@ -19,8 +19,11 @@ class ConcertLocator:
         "keyword={artist}&"
         "apikey={tmapi}").format(artist=self.artist, tmapi=self.tm_api_key)
         data = requests.get(artist_search_url).json()
-        self.artist_key = data["_embedded"]["attractions"][0]["id"]
-        return self.artist_key
+        if data["page"]["totalElements"]:
+            self.artist_key = data["_embedded"]["attractions"][0]["id"]
+            return self.artist_key
+        self.artist_key = 0
+        return 0
 
 #TODO: Error handling on request
     # Searches concerts for artist in the user's location
@@ -31,16 +34,16 @@ class ConcertLocator:
         "attractionId={artist_key}&" # Location
         "apikey={tmapi}").format(location=self.location, artist_key=self.artist_key, tmapi=self.tm_api_key) # authorizes
         data = requests.get(concert_search_url).json()
-        relevant_concerts = []
-        for event in data["_embedded"]["events"]:
-            print({"name":event["name"],
-                "date":event["dates"]["start"]["localDate"],
-                "venue":event["_embedded"]["venues"][0]["name"]})
+        relevant_concerts = list()
+        # Checks for empty return from the request
+        if data["page"]["totalElements"]:
+            for event in data["_embedded"]["events"]:
+                relevant_concerts.append({"name":event["name"],
+                    "date":event["dates"]["start"]["localDate"],
+                    "venue":event["_embedded"]["venues"][0]["name"]})
+        return relevant_concerts
 
     # Basic constructor, creates URL for later use in webscraping
     def __init__(self, artist):
         self.artist = artist
         self.relevant_concerts = self.__get_relevant_concerts()
-
-cl1 = ConcertLocator("Men I Trust")
-cl2 = ConcertLocator("Violent Femmes")
