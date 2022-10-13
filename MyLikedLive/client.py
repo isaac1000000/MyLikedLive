@@ -4,6 +4,7 @@
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from concert_locator import ConcertLocator
+import os.path
 
 # This scope allows for reading of recently listened
 scope = "user-read-recently-played"
@@ -24,9 +25,16 @@ for item in query_results['items']:
 print("Lately, you've been listening to: ")
 print(", ".join(unique_artists))
 
+#TODO: Error handling for incorrect location code
+# Gets user's location from resources/loc.txt, stored externally for continuity
+filepath = os.path.abspath(os.path.dirname(__file__))
+filepath = os.path.join(filepath, "../resources/loc.txt")
+with open(filepath, 'r') as l:
+    location = l.read().strip()
+
 # Iterates through artists to check for applicable concerts then prints
 for artist in unique_artists:
-    concerts = ConcertLocator(artist)
+    concerts = ConcertLocator(artist, location)
     if concerts.exists():
         print(concerts)
 

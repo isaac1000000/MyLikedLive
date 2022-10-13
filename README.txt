@@ -6,6 +6,7 @@ Cheers🥂
 
 Working list of used libraries:
 spotipy
+requests
 
 Procedure for using this program:
 Get an api key for Spotify and TicketMaster
@@ -15,4 +16,4 @@ Set local variables using these commands:
      export TICKETMASTER_API_KEY=(your spotipy api key)
 Choose your local market:
      In resources/dmaIDs.csv, find an appropriate local market
-     Change the value in MyLikedLive/loc.txt to the number listed (default NYC)
+     Change the value in resources/loc.txt to the number listed (default NYC)

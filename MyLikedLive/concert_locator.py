@@ -7,10 +7,7 @@ import json
 import time
 
 class ConcertLocator:
-    # Checks location for current on every instance, stored in external .txt file
-    # for user continuity
-    with open("loc.txt", 'r') as l:
-        location = l.read().strip()
+
     tm_api_key = os.getenv("TICKETMASTER_API_KEY")
 
 #TODO: Error handling on request
@@ -20,9 +17,8 @@ class ConcertLocator:
         "keyword={artist}&"
         "apikey={tmapi}").format(artist=self.artist, tmapi=self.tm_api_key)
         data = requests.get(artist_search_url).json()
-        if "fault" in data.keys():
-            print("fault error at artists")
-        if data["page"]["totalElements"]:
+        # Ensures that any one-off faults are ignored and the result was not empty
+        if (not "fault" in data.keys()) and data["page"]["totalElements"]:
             self.artist_key = data["_embedded"]["attractions"][0]["id"]
             return self.artist_key
         self.artist_key = 0
@@ -35,14 +31,13 @@ class ConcertLocator:
         time.sleep(.25)
         concert_search_url = ("https://app.ticketmaster.com/discovery/v2/events.json?"
         "dmaId={location}&" # Location
-        "attractionId={artist_key}&" # Location
-        "apikey={tmapi}").format(location=self.location, artist_key=self.artist_key, tmapi=self.tm_api_key) # authorizes
+        "attractionId={artist_key}&" # Artist
+        "apikey={tmapi}").format(location=self.location,
+        artist_key=self.artist_key, tmapi=self.tm_api_key)
         data = requests.get(concert_search_url).json()
         relevant_concerts = list()
         # Checks for empty return from the request
-        if "fault" in data.keys():
-            print("fault error at concerts")
-        if data["page"]["totalElements"]:
+        if (not "fault" in data.keys()) and data["page"]["totalElements"]:
             for event in data["_embedded"]["events"]:
                 relevant_concerts.append({"name":event["name"],
                     "date":event["dates"]["start"]["localDate"],
@@ -51,8 +46,9 @@ class ConcertLocator:
         return relevant_concerts
 
     # Basic constructor
-    def __init__(self, artist):
+    def __init__(self, artist, location):
         self.artist = artist
+        self.location = location
         self.relevant_concerts = self.__get_relevant_concerts()
 
     # Checks for presence of matching concerts
