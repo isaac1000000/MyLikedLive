@@ -4,6 +4,7 @@
 import requests
 import os
 import json
+import time
 
 class ConcertLocator:
     # Checks location for current on every instance, stored in external .txt file
@@ -35,6 +36,7 @@ class ConcertLocator:
         "apikey={tmapi}").format(location=self.location, artist_key=self.artist_key, tmapi=self.tm_api_key) # authorizes
         data = requests.get(concert_search_url).json()
         relevant_concerts = list()
+        print(data)
         # Checks for empty return from the request
         if data["page"]["totalElements"]:
             for event in data["_embedded"]["events"]:
@@ -43,7 +45,24 @@ class ConcertLocator:
                     "venue":event["_embedded"]["venues"][0]["name"]})
         return relevant_concerts
 
-    # Basic constructor, creates URL for later use in webscraping
+    # Basic constructor
     def __init__(self, artist):
         self.artist = artist
         self.relevant_concerts = self.__get_relevant_concerts()
+
+    # Checks for presence of matching concerts
+    def exists(self):
+        if self.relevant_concerts:
+            return True
+        else:
+            return False
+
+    # Gives toString method for debugging and output
+    def __str__(self):
+        if self.relevant_concerts:
+            result_string = ""
+            for concert in self.relevant_concerts:
+                result_string += "{name} is playing at {venue} on {date}\n".format(name=concert["name"], venue=concert["venue"], date=concert["date"])
+                return result_string
+        else:
+            return None
