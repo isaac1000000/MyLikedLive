@@ -60,7 +60,7 @@ class ConcertLocator:
 
     # Gives toString method for debugging and output
     def __str__(self):
-        if self.relevant_concerts:
+        if self.exists():
             result_list = []
             for concert in self.relevant_concerts:
                 result_list.append("{name} is playing at the venue \"{venue}\""
