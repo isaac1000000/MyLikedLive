@@ -10,7 +10,6 @@ requests
 Procedure for using this program:
 Get an api key for Spotify and TicketMaster
 Set local variables using these commands in the cmd line:
-     export SPOTIPY_CLIENT_ID=(your spotipy client id)
      export SPOTIPY_CLIENT_SECRET=(your spotipy client secret)
      export TICKETMASTER_API_KEY=(your spotipy api key)
 Choose your local market:

@@ -8,11 +8,13 @@ import os.path
 
 # This scope allows for reading of recently listened
 scope = "user-read-recently-played"
-redirect_uri = "https://google.com"
+redirect_uri = "http://localhost:8888"
+client_id = "dc6bf3fc568940c5afb5607c4281fb7e"
 
 # Creates a spotipy instance with the determined scope
-# Spotify object grabs SPOTIPY_CLIENT_ID and SPOTIPY_CLIENT_SECRET from environment
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(redirect_uri=redirect_uri, scope=scope))
+# Spotify object grabs SPOTIPY_CLIENT_SECRET from environment
+sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
+    redirect_uri=redirect_uri, scope=scope))
 
 # Creates a set of the unique artists in the user's recently played
 query_results = sp.current_user_recently_played()
