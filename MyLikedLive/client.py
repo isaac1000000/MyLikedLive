@@ -40,5 +40,7 @@ for artist in unique_artists:
         print(concerts)
 
 
-#TODO: make a nicer-looking interface, or at least more responsive
-#TODO: figure out how to do user-end logins instead of whatever is going on here
+#TODO: Make a nicer-looking interface, or at least more responsive
+#TODO: Figure out how to do user-end logins instead of whatever is going on here
+#TODO: Define custom exceptions & outline error protocol for concert_locator,
+    # including maybe finding a better way to avoid ratelimit errors
