@@ -20,6 +20,8 @@ class ConcertLocator:
         "keyword={artist}&"
         "apikey={tmapi}").format(artist=self.artist, tmapi=self.tm_api_key)
         data = requests.get(artist_search_url).json()
+        if "fault" in data.keys():
+            print("fault error at artists")
         if data["page"]["totalElements"]:
             self.artist_key = data["_embedded"]["attractions"][0]["id"]
             return self.artist_key
@@ -30,19 +32,22 @@ class ConcertLocator:
     # Searches concerts for artist in the user's location
     def __get_relevant_concerts(self):
         self.__get_artist_key()
+        time.sleep(.25)
         concert_search_url = ("https://app.ticketmaster.com/discovery/v2/events.json?"
         "dmaId={location}&" # Location
         "attractionId={artist_key}&" # Location
         "apikey={tmapi}").format(location=self.location, artist_key=self.artist_key, tmapi=self.tm_api_key) # authorizes
         data = requests.get(concert_search_url).json()
         relevant_concerts = list()
-        print(data)
         # Checks for empty return from the request
+        if "fault" in data.keys():
+            print("fault error at concerts")
         if data["page"]["totalElements"]:
             for event in data["_embedded"]["events"]:
                 relevant_concerts.append({"name":event["name"],
                     "date":event["dates"]["start"]["localDate"],
                     "venue":event["_embedded"]["venues"][0]["name"]})
+        time.sleep(.25)
         return relevant_concerts
 
     # Basic constructor
@@ -62,7 +67,7 @@ class ConcertLocator:
         if self.relevant_concerts:
             result_string = ""
             for concert in self.relevant_concerts:
-                result_string += "{name} is playing at {venue} on {date}\n".format(name=concert["name"], venue=concert["venue"], date=concert["date"])
-                return result_string
+                result_string += "\n{name} is playing at the venue \"{venue}\" on {date}".format(name=concert["name"], venue=concert["venue"], date=concert["date"])
+            return result_string
         else:
             return None
