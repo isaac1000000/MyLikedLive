@@ -28,7 +28,7 @@ class ConcertLocator:
     # Searches concerts for artist in the user's location
     def __get_relevant_concerts(self):
         self.__get_artist_key()
-        time.sleep(.25)
+        time.sleep(.25) # Avoids ratelimit errors
         concert_search_url = ("https://app.ticketmaster.com/discovery/v2/events.json?"
         "dmaId={location}&" # Location
         "attractionId={artist_key}&" # Artist
@@ -42,10 +42,10 @@ class ConcertLocator:
                 relevant_concerts.append({"name":event["name"],
                     "date":event["dates"]["start"]["localDate"],
                     "venue":event["_embedded"]["venues"][0]["name"]})
-        time.sleep(.25)
+        time.sleep(.25) # Avoids ratelimit errors
         return relevant_concerts
 
-    # Basic constructor
+    # Basic constructor, calls __get_relevant_concerts()
     def __init__(self, artist, location):
         self.artist = artist
         self.location = location
@@ -61,9 +61,9 @@ class ConcertLocator:
     # Gives toString method for debugging and output
     def __str__(self):
         if self.relevant_concerts:
-            result_string = ""
+            result_list = []
             for concert in self.relevant_concerts:
-                result_string += "\n{name} is playing at the venue \"{venue}\" on {date}".format(name=concert["name"], venue=concert["venue"], date=concert["date"])
-            return result_string
+                result_list.append("{name} is playing at the venue \"{venue}\" on {date}".format(name=concert["name"], venue=concert["venue"], date=concert["date"]))
+            return "\n".join(result_list)
         else:
             return None

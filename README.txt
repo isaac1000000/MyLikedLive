@@ -1,7 +1,6 @@
 Hello!
 This is a bit of a side project to play around with gathering API data.
-If you find it useful, would like to help out, or want to contact me for any reason, you can reach me at isaac.fisher@nyu.edu
-Feel free to take this framework and improve it! Just let me know so I can see what cool things people are doing.
+If you find it useful, have advice, or want to contact me for any reason, you can reach me at isaac.fisher@nyu.edu
 Cheers🥂
 
 Working list of used libraries:
@@ -10,7 +9,7 @@ requests
 
 Procedure for using this program:
 Get an api key for Spotify and TicketMaster
-Set local variables using these commands:
+Set local variables using these commands in the cmd line:
      export SPOTIPY_CLIENT_ID=(your spotipy client id)
      export SPOTIPY_CLIENT_SECRET=(your spotipy client secret)
      export TICKETMASTER_API_KEY=(your spotipy api key)

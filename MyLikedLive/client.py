@@ -32,6 +32,7 @@ filepath = os.path.join(filepath, "../resources/loc.txt")
 with open(filepath, 'r') as l:
     location = l.read().strip()
 
+print("Searching for local concerts from these artists...\n")
 # Iterates through artists to check for applicable concerts then prints
 for artist in unique_artists:
     concerts = ConcertLocator(artist, location)
@@ -39,6 +40,5 @@ for artist in unique_artists:
         print(concerts)
 
 
-#TODO: use list of artists to search ticketing websites
 #TODO: make a nicer-looking interface, or at least more responsive
 #TODO: figure out how to do user-end logins instead of whatever is going on here
