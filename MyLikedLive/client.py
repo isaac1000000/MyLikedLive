@@ -10,10 +10,9 @@ import json
 # This scope allows for reading of recently listened
 scope = "user-read-recently-played"
 
-#TODO: make os-independent
 # Gets necessary values for spotify and
 settings_filepath = os.path.abspath(os.path.dirname(__file__))
-settings_filepath = os.path.join(settings_filepath, "../resources/settings.json")
+settings_filepath = os.path.join(settings_filepath, "..", "resources", "settings.json")
 with open(settings_filepath, 'r') as s:
     settings = json.load(s)
     location = settings["locationCode"]
