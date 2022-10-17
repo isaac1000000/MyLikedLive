@@ -2,13 +2,12 @@
 # Isaac Fisher 10.11.2022
 
 import requests
-import os
 import json
 import time
 
 class ConcertLocator:
 
-    tm_api_key = os.getenv("TICKETMASTER_API_KEY")
+    tm_api_key = ""
 
 #TODO: Error handling on request
     # Gets the artist key for the artist to use in __get_relevant_concerts()
