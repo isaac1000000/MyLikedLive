@@ -5,16 +5,27 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 from concert_locator import ConcertLocator
 import os.path
+import json
 
 # This scope allows for reading of recently listened
 scope = "user-read-recently-played"
 redirect_uri = "http://localhost:8888"
 client_id = "dc6bf3fc568940c5afb5607c4281fb7e"
 
+#TODO: make os-independent
+# Gets user's location from resources/loc.txt, stored externally for continuity
+settings_filepath = os.path.abspath(os.path.dirname(__file__))
+settings_filepath = os.path.join(settings_filepath, "../resources/settings.json")
+with open(settings_filepath, 'r') as s:
+    settings = json.load(s)
+    location = settings["locationCode"]
+    client_secret = settings["spotipyClientSecret"]
+    ConcertLocator.tm_api_key = settings["ticketmasterAPIKey"]
+
 # Creates a spotipy instance with the determined scope
 # Spotify object grabs SPOTIPY_CLIENT_SECRET from environment
 sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
-    redirect_uri=redirect_uri, scope=scope))
+    client_secret=client_secret, redirect_uri=redirect_uri, scope=scope))
 
 # Creates a set of the unique artists in the user's recently played
 query_results = sp.current_user_recently_played()
@@ -26,13 +37,6 @@ for item in query_results['items']:
 # Print all recent unique artists
 print("Lately, you've been listening to: ")
 print(", ".join(unique_artists))
-
-#TODO: Error handling for incorrect location code
-# Gets user's location from resources/loc.txt, stored externally for continuity
-filepath = os.path.abspath(os.path.dirname(__file__))
-filepath = os.path.join(filepath, "../resources/loc.txt")
-with open(filepath, 'r') as l:
-    location = l.read().strip()
 
 print("Searching for local concerts from these artists...\n")
 # Iterates through artists to check for applicable concerts then prints
