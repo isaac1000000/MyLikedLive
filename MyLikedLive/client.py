@@ -9,18 +9,19 @@ import json
 
 # This scope allows for reading of recently listened
 scope = "user-read-recently-played"
-redirect_uri = "http://localhost:8888"
-client_id = "dc6bf3fc568940c5afb5607c4281fb7e"
 
 #TODO: make os-independent
-# Gets user's location from resources/loc.txt, stored externally for continuity
+# Gets necessary values for spotify and
 settings_filepath = os.path.abspath(os.path.dirname(__file__))
 settings_filepath = os.path.join(settings_filepath, "../resources/settings.json")
 with open(settings_filepath, 'r') as s:
     settings = json.load(s)
     location = settings["locationCode"]
-    client_secret = settings["spotipyClientSecret"]
+    client_id = settings["spotifyClientID"]
+    client_secret = settings["spotifyClientSecret"]
+    redirect_uri = settings["spotifyRedirectURI"]
     ConcertLocator.tm_api_key = settings["ticketmasterAPIKey"]
+
 
 # Creates a spotipy instance with the determined scope
 # Spotify object grabs SPOTIPY_CLIENT_SECRET from environment
