@@ -58,6 +58,6 @@ for concert in all_concerts:
 print()
 
 
-#TODO: Make a nicer-looking interface, or at least more responsive
 #TODO: Define custom exceptions & outline error protocol for concert_locator,
     # including maybe finding a better way to avoid ratelimit errors
+#TODO: GUI
