@@ -2,3 +2,4 @@
 MyLikedLive/.cache
 resources/settings.json
 .DS_Store
+__pycache__/
