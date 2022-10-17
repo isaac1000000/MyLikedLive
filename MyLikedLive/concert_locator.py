@@ -57,7 +57,7 @@ class ConcertLocator:
         else:
             return False
 
-    # Gives toString method for debugging and output
+    # toString method for debugging and output
     def __str__(self):
         if self.exists():
             result_list = []
