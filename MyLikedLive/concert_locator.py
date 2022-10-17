@@ -62,9 +62,9 @@ class ConcertLocator:
         if self.exists():
             result_list = []
             for concert in self.relevant_concerts:
-                result_list.append("{name} is playing at the venue \"{venue}\""
-                " on {date}".format(name=concert["name"], venue=concert["venue"],
-                date=concert["date"]))
+                result_list.append("[{artist}]: {name} is playing at the venue \"{venue}\""
+                " on {date}".format(artist=self.artist, name=concert["name"],
+                venue=concert["venue"], date=concert["date"]))
             return "\n".join(result_list)
         else:
             return None
