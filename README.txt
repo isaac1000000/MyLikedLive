@@ -13,3 +13,4 @@ Paste the appropriate values into the resources/settings.json file
 Choose your local market:
      In resources/dmaIDs.csv, find your local market
      Change the value in resources/settings.json to the number listed (default NYC)
+Run MyLikedLive/client.py
