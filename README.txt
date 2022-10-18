@@ -3,14 +3,4 @@ This is a bit of a side project to play around with gathering API data. It will 
 If you find it useful, have advice, or want to contact me for any reason, you can reach me at isaac.fisher@nyu.edu
 Cheers🥂
 
-Working list of used libraries:
-spotipy
-requests
-
-Procedure for using this program:
-Pip install spotipy and requests
-Choose your local market:
-     In resources/dmaIDs.csv, find your local market
-     Change the value in resources/settings.json to the number listed (default NYC)
-Run MyLikedLive/client.py
-Authorize spotify in your web browser
+Before using, change the value of locationCode in resources/config.json to your local market code (found in resources/dmaIDs.csv)
