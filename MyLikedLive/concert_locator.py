@@ -7,6 +7,7 @@ import time
 
 class ConcertLocator:
 
+    # This value will be set in client.py when config.json is parsed
     tm_api_key = ""
 
 #TODO: Error handling on request
