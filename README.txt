@@ -8,8 +8,7 @@ spotipy
 requests
 
 Procedure for using this program:
-Get an api key for Spotify and TicketMaster
-Paste the appropriate values into the resources/settings.json file
+Pip install spotipy and requests
 Choose your local market:
      In resources/dmaIDs.csv, find your local market
      Change the value in resources/settings.json to the number listed (default NYC)
