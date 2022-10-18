@@ -2,7 +2,7 @@
 # Created by Isaac Fisher 10.11.2022
 
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth
+from spotipy.oauth2 import SpotifyPKCE
 from concert_locator import ConcertLocator
 import os.path
 import json
@@ -17,15 +17,14 @@ with open(settings_filepath, 'r') as s:
     settings = json.load(s)
     location = settings["locationCode"]
     client_id = settings["spotifyClientID"]
-    client_secret = settings["spotifyClientSecret"]
     redirect_uri = settings["spotifyRedirectURI"]
     ConcertLocator.tm_api_key = settings["ticketmasterAPIKey"]
 
 
 # Creates a spotipy instance with the determined scope
-# Spotify object grabs SPOTIPY_CLIENT_SECRET from environment
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
-    client_secret=client_secret, redirect_uri=redirect_uri, scope=scope))
+# SpotifyPKCE handles all auth flow without needing a client secret
+sp = spotipy.Spotify(auth_manager=SpotifyPKCE(client_id=client_id,
+    redirect_uri=redirect_uri, scope=scope))
 
 # Creates a set of the unique artists in the user's recently played
 query_results = sp.current_user_recently_played()
