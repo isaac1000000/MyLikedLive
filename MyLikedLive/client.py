@@ -37,8 +37,9 @@ except AssertionError as err:
 try:
     sp = spotipy.Spotify(auth_manager=SpotifyPKCE(client_id=client_id,
         redirect_uri=redirect_uri, scope=scope))
+    assert sp.current_user() # Makes sure authentication was successful
 except:
-    raise FailedToAuthorizeException(endpoint="SpotifyPKCE web auth")
+    raise exceptions.FailedToAuthorizeException(endpoint="SpotifyPKCE web auth")
 
 # Creates a set of the unique artists in the user's recently played
 try:
@@ -48,7 +49,7 @@ try:
         for artist in item['track']['artists']:
             unique_artists.add(artist['name'])
 except:
-    raise RequestFaultException("Spotify API request endpoint")
+    raise exceptions.RequestFaultException("Spotify API request endpoint")
 
 # Print all recent unique artists
 print()
