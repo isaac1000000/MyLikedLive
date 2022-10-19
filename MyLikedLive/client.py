@@ -11,7 +11,7 @@ from utils import exceptions
 # This scope allows for reading of recently listened
 scope = "user-read-recently-played"
 
-# Gets necessary values for spotify and
+# Gets necessary values from resources/config.json and ensures validity
 try:
     settings_filepath = os.path.abspath(os.path.dirname(__file__))
     settings_filepath = os.path.join(settings_filepath, "..", "resources", "config.json")
@@ -32,7 +32,7 @@ except KeyError as err:
 except AssertionError as err:
     raise exceptions.ConfigFaultException("'" + err.args[0][0] + "'", type=err.args[0][1])
 
-# Creates a spotipy instance with the determined scope
+# Creates a spotipy instance with the necessary scope
 # SpotifyPKCE handles all auth flow without needing a client secret
 try:
     sp = spotipy.Spotify(auth_manager=SpotifyPKCE(client_id=client_id,
@@ -73,7 +73,4 @@ for concert in all_concerts:
     print(concert)
 print()
 
-
-#TODO: Define custom exceptions & outline error protocol for concert_locator,
-    # including maybe finding a better way to avoid ratelimit errors
 #TODO: GUI

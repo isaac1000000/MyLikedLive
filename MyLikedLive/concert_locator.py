@@ -1,4 +1,4 @@
-# Will define functionality to parse websites for concert information
+# Defines functionality to parse websites for concert information
 # Isaac Fisher 10.11.2022
 
 import requests
