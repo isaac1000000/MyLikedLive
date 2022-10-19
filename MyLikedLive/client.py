@@ -34,9 +34,9 @@ except AssertionError as err:
 
 # Creates a spotipy instance with the necessary scope
 # SpotifyPKCE handles all auth flow without needing a client secret
+sp = spotipy.Spotify(auth_manager=SpotifyPKCE(client_id=client_id,
+    redirect_uri=redirect_uri, scope=scope))
 try:
-    sp = spotipy.Spotify(auth_manager=SpotifyPKCE(client_id=client_id,
-        redirect_uri=redirect_uri, scope=scope))
     assert sp.current_user() # Makes sure authentication was successful
 except:
     raise exceptions.FailedToAuthorizeException(endpoint="SpotifyPKCE web auth")
