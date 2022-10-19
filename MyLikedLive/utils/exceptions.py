@@ -9,7 +9,7 @@ class FailedToAuthorizeException(Exception):
             endpoint=self.endpoint)
 
 class RequestFaultException(Exception):
-    def __init__(self, request_address, response_code="Generic"):
+    def __init__(self, request_address, response_code="generic"):
         self.request_address = request_address
         self.response_code = response_code
         self.message = "Invalid return"
@@ -21,10 +21,11 @@ class RequestFaultException(Exception):
             return_address=self.request_address, response_code=self.response_code)
 
 class ConfigFaultException(Exception):
-    def __init__(self, error_at="file_presence"):
+    def __init__(self, error_at="file_presence", type="generic"):
         self.error_at = error_at
+        self.type = type
         self.message = "Error in resources/config.json"
         super().__init__(self.message)
     def __str__(self):
-        return "{message} at {error_at}".format(message=self.message,
-            error_at=self.error_at)
+        return "{message} at {error_at} of type {type}".format(message=self.message,
+            error_at=self.error_at, type=self.type)

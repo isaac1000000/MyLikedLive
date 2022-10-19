@@ -12,15 +12,25 @@ from utils import exceptions
 scope = "user-read-recently-played"
 
 # Gets necessary values for spotify and
-settings_filepath = os.path.abspath(os.path.dirname(__file__))
-settings_filepath = os.path.join(settings_filepath, "..", "resources", "config.json")
-with open(settings_filepath, 'r') as s:
-    settings = json.load(s)
-    location = settings["locationCode"]
-    client_id = settings["spotifyClientID"]
-    redirect_uri = settings["spotifyRedirectURI"]
-    ConcertLocator.tm_api_key = settings["ticketmasterAPIKey"]
-
+try:
+    settings_filepath = os.path.abspath(os.path.dirname(__file__))
+    settings_filepath = os.path.join(settings_filepath, "..", "resources", "config.json")
+    with open(settings_filepath, 'r') as s:
+        settings = json.load(s)
+        location = settings["locationCode"]
+        assert location and isinstance(location, int), ["locationCode", "not_an_integer"]
+        client_id = settings["spotifyClientID"]
+        assert client_id and isinstance(client_id, str), ["spotifyClientID", "not_a_string"]
+        redirect_uri = settings["spotifyRedirectURI"]
+        assert redirect_uri and isinstance(redirect_uri, str), ["spotifyRedirectURI", "not_a_string"]
+        ConcertLocator.tm_api_key = settings["ticketmasterAPIKey"]
+        assert ConcertLocator.tm_api_key and isinstance(ConcertLocator.tm_api_key, str), ["ticketMasterAPIKey", "not_a_string"]
+except FileNotFoundError:
+    raise exceptions.ConfigFaultException()
+except KeyError as err:
+    raise exceptions.ConfigFaultException("'" + err.args[0] + "'", type="not_found")
+except AssertionError as err:
+    raise exceptions.ConfigFaultException("'" + err.args[0][0] + "'", type=err.args[0][1])
 
 # Creates a spotipy instance with the determined scope
 # SpotifyPKCE handles all auth flow without needing a client secret
