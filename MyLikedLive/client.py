@@ -34,15 +34,21 @@ except AssertionError as err:
 
 # Creates a spotipy instance with the determined scope
 # SpotifyPKCE handles all auth flow without needing a client secret
-sp = spotipy.Spotify(auth_manager=SpotifyPKCE(client_id=client_id,
-    redirect_uri=redirect_uri, scope=scope))
+try:
+    sp = spotipy.Spotify(auth_manager=SpotifyPKCE(client_id=client_id,
+        redirect_uri=redirect_uri, scope=scope))
+except:
+    raise FailedToAuthorizeException(endpoint="SpotifyPKCE web auth")
 
 # Creates a set of the unique artists in the user's recently played
-query_results = sp.current_user_recently_played()
-unique_artists = set()
-for item in query_results['items']:
-    for artist in item['track']['artists']:
-        unique_artists.add(artist['name'])
+try:
+    query_results = sp.current_user_recently_played()
+    unique_artists = set()
+    for item in query_results['items']:
+        for artist in item['track']['artists']:
+            unique_artists.add(artist['name'])
+except:
+    raise RequestFaultException("Spotify API request endpoint")
 
 # Print all recent unique artists
 print()
