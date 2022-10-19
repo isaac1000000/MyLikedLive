@@ -4,27 +4,34 @@
 import requests
 import json
 import time
+from utils import exceptions
 
 class ConcertLocator:
 
     # This value will be set in client.py when config.json is parsed
     tm_api_key = ""
 
-#TODO: Error handling on request
     # Gets the artist key for the artist to use in __get_relevant_concerts()
     def __get_artist_key(self):
         artist_search_url = ("https://app.ticketmaster.com/discovery/v2/attractions.json?"
         "keyword={artist}&"
         "apikey={tmapi}").format(artist=self.artist, tmapi=self.tm_api_key)
-        data = requests.get(artist_search_url).json()
-        # Ensures that any one-off faults are ignored and the result was not empty
-        if (not "fault" in data.keys()) and data["page"]["totalElements"]:
-            self.artist_key = data["_embedded"]["attractions"][0]["id"]
-            return self.artist_key
-        self.artist_key = 0
-        return 0
+        data = requests.get(artist_search_url)
+        status = data.status_code
+        if status == 401:
+            raise exceptions.FailedToAuthorizeException(endpoint=artist_search_url)
+        elif status == 200:
+            data = data.json()
+            if (not "fault" in data.keys()) and data["page"]["totalElements"]:
+                self.artist_key = data["_embedded"]["attractions"][0]["id"]
+                return self.artist_key
+            self.artist_key = 0
+            return 0
+        else:
+            raise exceptions.RequestFaultException(artist_search_url, response_code=status)
 
-#TODO: Error handling on request
+
+
     # Searches concerts for artist in the user's location
     def __get_relevant_concerts(self):
         self.__get_artist_key()
@@ -68,4 +75,10 @@ class ConcertLocator:
                 venue=concert["venue"], date=concert["date"]))
             return "\n".join(result_list)
         else:
-            return None
+            return ""
+
+if __name__ == "__main__":
+    ConcertLocator.tm_api_key = "k1cKVYAZKMXAZKWRTSXFh5FMKAo1BuV9"
+    print(ConcertLocator("Men I Trust", 345))
+    print(ConcertLocator("Weatherday", 345))
+    print(ConcertLocator("asskdajfq381", 345))
