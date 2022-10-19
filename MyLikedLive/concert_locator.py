@@ -22,7 +22,7 @@ class ConcertLocator:
             raise exceptions.FailedToAuthorizeException(endpoint=artist_search_url)
         elif status == 200:
             data = data.json()
-            if (not "fault" in data.keys()) and data["page"]["totalElements"]:
+            if data["page"]["totalElements"]:
                 self.artist_key = data["_embedded"]["attractions"][0]["id"]
                 return self.artist_key
             self.artist_key = 0
@@ -41,16 +41,23 @@ class ConcertLocator:
         "attractionId={artist_key}&" # Artist
         "apikey={tmapi}").format(location=self.location,
         artist_key=self.artist_key, tmapi=self.tm_api_key)
-        data = requests.get(concert_search_url).json()
-        relevant_concerts = list()
-        # Checks for empty return from the request
-        if (not "fault" in data.keys()) and data["page"]["totalElements"]:
-            for event in data["_embedded"]["events"]:
-                relevant_concerts.append({"name":event["name"],
-                    "date":event["dates"]["start"]["localDate"],
-                    "venue":event["_embedded"]["venues"][0]["name"]})
-        time.sleep(.25) # Avoids ratelimit errors
-        return relevant_concerts
+        data = requests.get(concert_search_url)
+        status = data.status_code
+        if status == 401:
+            raise exceptions.FailedToAuthorizeException(endpoint=concert_search_url)
+        elif status == 200:
+            data = data.json()
+            relevant_concerts = list()
+            # Checks for empty return from the request
+            if data["page"]["totalElements"]:
+                for event in data["_embedded"]["events"]:
+                    relevant_concerts.append({"name":event["name"],
+                        "date":event["dates"]["start"]["localDate"],
+                        "venue":event["_embedded"]["venues"][0]["name"]})
+            time.sleep(.25) # Avoids ratelimit errors
+            return relevant_concerts
+        else:
+            raise exceptions.RequestFaultException(concert_search_url, response_code=status)
 
     # Basic constructor, calls __get_relevant_concerts()
     def __init__(self, artist, location):
