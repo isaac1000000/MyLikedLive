@@ -6,6 +6,7 @@ from spotipy.oauth2 import SpotifyPKCE
 from concert_locator import ConcertLocator
 import os.path
 import json
+from utils import exceptions
 
 # This scope allows for reading of recently listened
 scope = "user-read-recently-played"

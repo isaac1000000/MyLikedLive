@@ -19,3 +19,12 @@ class RequestFaultException(Exception):
         return "{message} from address: {return_address}\
             with response code: {response_code}".format(message=self.message,
             return_address=self.request_address, response_code=self.response_code)
+
+class ConfigFaultException(Exception):
+    def __init__(self, error_at="file_presence"):
+        self.error_at = error_at
+        self.message = "Error in resources/config.json"
+        super().__init__(self.message)
+    def __str__(self):
+        return "{message} at {error_at}".format(message=self.message,
+            error_at=self.error_at)
