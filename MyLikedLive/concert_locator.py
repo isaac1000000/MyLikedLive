@@ -92,9 +92,3 @@ class ConcertLocator:
             return "\n".join(result_list)
         else:
             return ""
-
-if __name__ == "__main__":
-    ConcertLocator.tm_api_key = "k1cKVYAZKMXAZKWRTSXFh5FMKAo1BuV9"
-    print(ConcertLocator("Men I Trust", 345))
-    print(ConcertLocator("Weatherday", 345))
-    print(ConcertLocator("asskdajfq381", 345))
