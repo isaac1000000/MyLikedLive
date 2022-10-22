@@ -19,6 +19,10 @@ class MainWindow(QMainWindow):
         self.stack1.user_label.setText("You're logged in as: " + self.ss.get_username())
         self.stack1.continue_button.setEnabled(True)
 
+    def proceed_to_results(self):
+        self.Stack.setCurrentIndex(2)
+        self.ss.find_artist_concerts()
+
     # Makes a generic QWidget into a login window
     def make_login_window(self, stack):
         stack.instruction_label = QLabel()
@@ -39,16 +43,19 @@ class MainWindow(QMainWindow):
 
     # Makes a generic QWidget into a prompt window
     def make_prompt_window(self, stack):
+        stack.results_button = QPushButton("Get local concerts")
+        stack.results_button.clicked.connect(self.proceed_to_results)
         stack.back_button = QPushButton("Back to login")
         stack.back_button.clicked.connect((lambda: self.Stack.setCurrentIndex(0)))
         layout = QVBoxLayout()
+        layout.addWidget(stack.results_button)
         layout.addWidget(stack.back_button)
         stack.setLayout(layout)
         return stack
 
     # Makes a generic QWidget into a results window
     def make_results_window(self, stack):
-        stack.label = QLabel("Another Window")
+        stack.label = QLabel("Results Window")
         layout = QVBoxLayout()
         layout.addWidget(stack.label)
         stack.setLayout(layout)
