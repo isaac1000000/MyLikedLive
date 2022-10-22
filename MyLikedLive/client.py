@@ -8,21 +8,18 @@ class MainWindow(QMainWindow):
         if os.path.exists(".cache"):
             os.remove(".cache")
         self.ss = SpotifyScraper()
+        self.Stack.setCurrentIndex(1)
 
 
     def make_login_window(self, stack):
         stack.instruction_label = QLabel()
         stack.instruction_label.setText("Press the button to connect to spotify")
-
         stack.connect_button = QPushButton("Connect to spotify")
         stack.connect_button.clicked.connect(self.login)
-
         layout = QVBoxLayout()
         layout.addWidget(stack.instruction_label)
         layout.addWidget(stack.connect_button)
-
         stack.setLayout(layout)
-
         return stack
 
     def make_prompt_window(self, stack):
@@ -54,7 +51,10 @@ class MainWindow(QMainWindow):
         self.Stack.addWidget(self.stack2)
         self.Stack.addWidget(self.stack3)
 
-        self.Stack.setCurrentIndex(0)
+        if os.path.exists(".cache"):
+            self.Stack.setCurrentIndex(1)
+        else:
+            self.Stack.setCurrentIndex(0)
 
         self.setCentralWidget(self.Stack)
 
