@@ -73,4 +73,3 @@ class SpotifyScraper:
         self.gather_settings()
         self.create_spotify_instance()
         self.gather_recently_played()
-        self.find_artist_concerts()
