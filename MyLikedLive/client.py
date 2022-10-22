@@ -15,30 +15,34 @@ class MainWindow(QMainWindow):
         if os.path.exists(".cache"):
             os.remove(".cache")
         self.ss = SpotifyScraper()
-        self.Stack.setCurrentIndex(1)
-
+        self.stack1.continue_button.setEnabled(True)
 
     def make_login_window(self, stack):
         stack.instruction_label = QLabel()
         stack.instruction_label.setText("Press the button to connect to spotify")
         stack.connect_button = QPushButton("Connect to spotify")
         stack.connect_button.clicked.connect(self.login)
+        stack.continue_button = QPushButton("Continue")
+        stack.continue_button.setEnabled(False)
+        stack.continue_button.clicked.connect((lambda: self.Stack.setCurrentIndex(1)))
         layout = QVBoxLayout()
         layout.addWidget(stack.instruction_label)
         layout.addWidget(stack.connect_button)
+        layout.addWidget(stack.continue_button)
         stack.setLayout(layout)
         return stack
 
     def make_prompt_window(self, stack):
+        stack.back_button = QPushButton("Back to login")
+        stack.back_button.clicked.connect((lambda: self.Stack.setCurrentIndex(0)))
         layout = QVBoxLayout()
-        stack.label = QLabel("Another Window")
-        layout.addWidget(stack.label)
+        layout.addWidget(stack.back_button)
         stack.setLayout(layout)
         return stack
 
     def make_results_window(self, stack):
-        layout = QVBoxLayout()
         stack.label = QLabel("Another Window")
+        layout = QVBoxLayout()
         layout.addWidget(stack.label)
         stack.setLayout(layout)
         return stack
@@ -60,6 +64,7 @@ class MainWindow(QMainWindow):
 
         if os.path.exists(".cache"):
             self.Stack.setCurrentIndex(1)
+            self.stack1.continue_button.setEnabled(True)
         else:
             self.Stack.setCurrentIndex(0)
 
