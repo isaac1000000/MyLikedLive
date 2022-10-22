@@ -4,22 +4,18 @@ from PyQt6.QtCore import QSize
 import os.path
 
 class MainWindow(QMainWindow):
-    #TODO: use stackedwidget to better handle multiple windows
-    def login(self):
-        if os.path.exists(".cache"):
-            os.remove(".cache")
-        self.ss = SpotifyScraper()
+#    def login(self):
+#        if os.path.exists(".cache"):
+#            os.remove(".cache")
+#        self.ss = SpotifyScraper()
 
 
     def make_login_window(self, stack):
-        stack.setWindowTitle("My Liked, Live")
-        stack.resize(QSize(400, 400))
-
         stack.instruction_label = QLabel()
         stack.instruction_label.setText("Press the button to connect to spotify")
 
         stack.connect_button = QPushButton("Connect to spotify")
-        stack.connect_button.clicked.connect(self.login)
+#        stack.connect_button.clicked.connect(self.login)
 
         layout = QVBoxLayout()
         layout.addWidget(stack.instruction_label)
@@ -27,40 +23,47 @@ class MainWindow(QMainWindow):
 
         stack.setLayout(layout)
 
+        return stack
+
     def make_prompt_window(self, stack):
         layout = QVBoxLayout()
         stack.label = QLabel("Another Window")
         layout.addWidget(stack.label)
         stack.setLayout(layout)
+        return stack
 
-    def make_result_window(self, stack):
+    def make_results_window(self, stack):
         layout = QVBoxLayout()
         stack.label = QLabel("Another Window")
         layout.addWidget(stack.label)
         stack.setLayout(layout)
-
+        return stack
 
     def __init__(self):
-      super(MainWindow, self).__init__()
-      self.leftlist = QListWidget()
-      self.leftlist.insertItem (0, 'login_window' )
-      self.leftlist.insertItem (1, 'prompt_window' )
-      self.leftlist.insertItem (2, 'results_window' )
+        super().__init__()
 
-      self.stack1 = self.make_login_window(QWidget())
-      self.stack2 = self.make_prompt_window(QWidget())
-      self.stack3 = self.make_result_window(QWidget())
+        self.setWindowTitle("My Liked, Live")
+        self.resize(QSize(400, 400))
+
+        self.stack1 = self.make_login_window(QWidget())
+        self.stack2 = self.make_prompt_window(QWidget())
+        self.stack3 = self.make_results_window(QWidget())
+
+        self.Stack = QStackedWidget()
+        self.Stack.addWidget(self.stack1)
+        self.Stack.addWidget(self.stack2)
+        self.Stack.addWidget(self.stack3)
+
+        self.Stack.setCurrentIndex(0)
+
+        self.setCentralWidget(self.Stack)
 
 
-      self.Stack = QStackedWidget()
-      self.Stack.addWidget(self.stack1)
-      self.Stack.addWidget(self.stack2)
-      self.Stack.addWidget(self.stack3)
+app = QApplication([])
+ex = MainWindow()
+ex.show()
+app.exec()
 
-      layout = QVBoxLayout()
-      layout.addWidget(Stack)
-
-      self.show()
 
 #app = QApplication([])
 #login_window = LoginWindow()
@@ -139,8 +142,3 @@ class stackedExample(QWidget):
 
    def display(self,i):
       self.Stack.setCurrentIndex(i)
-
-
-app = QApplication([])
-ex = MainWindow()
-app.exec()
