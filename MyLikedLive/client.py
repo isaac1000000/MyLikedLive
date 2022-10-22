@@ -11,27 +11,33 @@ from PyQt6.QtCore import QSize
 import os.path
 
 class MainWindow(QMainWindow):
+    # Initiates login process when login button is pressed
     def login(self):
         if os.path.exists(".cache"):
             os.remove(".cache")
         self.ss = SpotifyScraper()
+        self.stack1.user_label.setText("You're logged in as: " + self.ss.get_username())
         self.stack1.continue_button.setEnabled(True)
 
+    # Makes a generic QWidget into a login window
     def make_login_window(self, stack):
         stack.instruction_label = QLabel()
         stack.instruction_label.setText("Press the button to connect to spotify")
         stack.connect_button = QPushButton("Connect to spotify")
         stack.connect_button.clicked.connect(self.login)
+        stack.user_label = QLabel()
         stack.continue_button = QPushButton("Continue")
         stack.continue_button.setEnabled(False)
         stack.continue_button.clicked.connect((lambda: self.Stack.setCurrentIndex(1)))
         layout = QVBoxLayout()
         layout.addWidget(stack.instruction_label)
         layout.addWidget(stack.connect_button)
+        layout.addWidget(stack.user_label)
         layout.addWidget(stack.continue_button)
         stack.setLayout(layout)
         return stack
 
+    # Makes a generic QWidget into a prompt window
     def make_prompt_window(self, stack):
         stack.back_button = QPushButton("Back to login")
         stack.back_button.clicked.connect((lambda: self.Stack.setCurrentIndex(0)))
@@ -40,6 +46,7 @@ class MainWindow(QMainWindow):
         stack.setLayout(layout)
         return stack
 
+    # Makes a generic QWidget into a results window
     def make_results_window(self, stack):
         stack.label = QLabel("Another Window")
         layout = QVBoxLayout()
@@ -62,8 +69,11 @@ class MainWindow(QMainWindow):
         self.Stack.addWidget(self.stack2)
         self.Stack.addWidget(self.stack3)
 
+        # If .cache exists, the user is already logged in
         if os.path.exists(".cache"):
+            self.ss = SpotifyScraper()
             self.Stack.setCurrentIndex(1)
+            self.stack1.user_label.setText("You're logged in as: " + self.ss.get_username())
             self.stack1.continue_button.setEnabled(True)
         else:
             self.Stack.setCurrentIndex(0)

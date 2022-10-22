@@ -73,3 +73,6 @@ class SpotifyScraper:
         self.gather_settings()
         self.create_spotify_instance()
         self.gather_recently_played()
+
+    def get_username(self):
+        return self.sp.current_user()["id"]
