@@ -1,5 +1,12 @@
 from spotify_scraper import SpotifyScraper
-from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton, QListWidget, QStackedWidget, QFormLayout, QLineEdit, QHBoxLayout, QRadioButton, QCheckBox
+from PyQt6.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QLabel,
+    QVBoxLayout,
+    QWidget,
+    QPushButton,
+    QStackedWidget)
 from PyQt6.QtCore import QSize
 import os.path
 
