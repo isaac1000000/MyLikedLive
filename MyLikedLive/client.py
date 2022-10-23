@@ -21,6 +21,7 @@ class MainWindow(QMainWindow):
         self.stack1.user_label.setText("You're logged in as: " + self.ss.get_username())
         self.stack1.continue_button.setEnabled(True)
 
+    # Moves to results page from prompt page
     def proceed_to_results(self):
         self.ss.gather_recently_played()
         self.ss.find_artist_concerts()
@@ -28,12 +29,9 @@ class MainWindow(QMainWindow):
         self.Stack.addWidget(self.stack3)
         self.Stack.setCurrentIndex(2)
 
+    # Changes the value stored in locationCode in resources/config.json
     def location_changed(self, location):
         settings.write_to_config("locationCode", dma_grabber.get_ids()[location])
-        # TODO: Write location code with index of dma_grabber.get_ids() to
-        # resources/config.json
-
-
 
     # Makes a generic QWidget into a login window
     def make_login_window(self, stack):
