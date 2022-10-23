@@ -1,6 +1,6 @@
 {
-     "locationCode": 345,
-     "spotifyClientID": "dc6bf3fc568940c5afb5607c4281fb7e",
-     "spotifyRedirectURI": "http://localhost:8888",
-     "ticketmasterAPIKey": "k1cKVYAZKMXAZKWRTSXFh5FMKAo1BuV9"
+    "locationCode": 345,
+    "spotifyClientID": "dc6bf3fc568940c5afb5607c4281fb7e",
+    "spotifyRedirectURI": "http://localhost:8888",
+    "ticketmasterAPIKey": "k1cKVYAZKMXAZKWRTSXFh5FMKAo1BuV9"
 }
