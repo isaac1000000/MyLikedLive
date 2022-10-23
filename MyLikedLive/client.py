@@ -44,6 +44,7 @@ class MainWindow(QMainWindow):
         stack.location_instructions.setText("Choose your location:")
         stack.location_dropdown = QComboBox()
         stack.location_dropdown.addItems(loc for loc in dma_grabber.get_locations())
+        stack.location_dropdown.setCurrentText(dma_grabber.get_location(settings.get_location_code()))
         stack.location_dropdown.currentTextChanged.connect(self.location_changed)
         stack.continue_button = QPushButton("Continue")
         stack.continue_button.setEnabled(False)
@@ -92,9 +93,6 @@ class MainWindow(QMainWindow):
         self.Stack = QStackedWidget()
         self.Stack.addWidget(self.stack1)
         self.Stack.addWidget(self.stack2)
-
-        # TODO: Check resources/config.json and set default value for the
-        # QComboBox self.stack1.location_dropdown
 
         # If .cache exists, the user is already logged in
         if os.path.exists(".cache"):
