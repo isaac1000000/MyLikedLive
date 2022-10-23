@@ -57,6 +57,7 @@ class SpotifyScraper:
 
     # Gets artists' local concerts from ticketmaster
     def find_artist_concerts(self):
+        self.gather_settings()
         progress = 0
         self.all_concerts = []
         # Iterates through artists to check for applicable concerts then prints
