@@ -20,8 +20,12 @@ class MainWindow(QMainWindow):
         self.stack1.continue_button.setEnabled(True)
 
     def proceed_to_results(self):
-        self.Stack.setCurrentIndex(2)
+        self.ss.gather_recently_played()
         self.ss.find_artist_concerts()
+        self.stack3 = self.make_results_window(QWidget())
+        self.Stack.addWidget(self.stack3)
+        self.Stack.setCurrentIndex(2)
+
 
     # Makes a generic QWidget into a login window
     def make_login_window(self, stack):
@@ -55,7 +59,10 @@ class MainWindow(QMainWindow):
 
     # Makes a generic QWidget into a results window
     def make_results_window(self, stack):
-        stack.label = QLabel("Results Window")
+        results = ""
+        for concert_list in self.ss.all_concerts:
+            results += str(concert_list)
+        stack.label = QLabel(results)
         layout = QVBoxLayout()
         layout.addWidget(stack.label)
         stack.setLayout(layout)
@@ -69,12 +76,10 @@ class MainWindow(QMainWindow):
 
         self.stack1 = self.make_login_window(QWidget())
         self.stack2 = self.make_prompt_window(QWidget())
-        self.stack3 = self.make_results_window(QWidget())
 
         self.Stack = QStackedWidget()
         self.Stack.addWidget(self.stack1)
         self.Stack.addWidget(self.stack2)
-        self.Stack.addWidget(self.stack3)
 
         # If .cache exists, the user is already logged in
         if os.path.exists(".cache"):
