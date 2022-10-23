@@ -1,8 +1,10 @@
 from spotify_scraper import SpotifyScraper
+from utils import dma_grabber
 from PyQt6.QtWidgets import (
     QApplication,
     QMainWindow,
     QLabel,
+    QComboBox,
     QVBoxLayout,
     QWidget,
     QPushButton,
@@ -34,6 +36,10 @@ class MainWindow(QMainWindow):
         stack.connect_button = QPushButton("Connect to spotify")
         stack.connect_button.clicked.connect(self.login)
         stack.user_label = QLabel()
+        stack.location_instructions = QLabel()
+        stack.location_instructions.setText("Choose your location:")
+        stack.location_dropdown = QComboBox()
+        stack.location_dropdown.addItems(loc for loc in dma_grabber.get_locations())
         stack.continue_button = QPushButton("Continue")
         stack.continue_button.setEnabled(False)
         stack.continue_button.clicked.connect((lambda: self.Stack.setCurrentIndex(1)))
@@ -41,6 +47,8 @@ class MainWindow(QMainWindow):
         layout.addWidget(stack.instruction_label)
         layout.addWidget(stack.connect_button)
         layout.addWidget(stack.user_label)
+        layout.addWidget(stack.location_instructions)
+        layout.addWidget(stack.location_dropdown)
         layout.addWidget(stack.continue_button)
         stack.setLayout(layout)
         return stack
