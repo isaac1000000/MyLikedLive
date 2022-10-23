@@ -61,7 +61,7 @@ class MainWindow(QMainWindow):
     def make_results_window(self, stack):
         results = ""
         for concert_list in self.ss.all_concerts:
-            results += str(concert_list)
+            results += str(concert_list) + "\n"
         stack.label = QLabel(results)
         layout = QVBoxLayout()
         layout.addWidget(stack.label)
@@ -72,7 +72,6 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("My Liked, Live")
-        self.resize(QSize(400, 400))
 
         self.stack1 = self.make_login_window(QWidget())
         self.stack2 = self.make_prompt_window(QWidget())
