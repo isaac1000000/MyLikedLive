@@ -1,5 +1,5 @@
 from spotify_scraper import SpotifyScraper
-from utils import dma_grabber
+from utils import dma_grabber, settings
 from PyQt6.QtWidgets import (
     QApplication,
     QMainWindow,
@@ -29,7 +29,7 @@ class MainWindow(QMainWindow):
         self.Stack.setCurrentIndex(2)
 
     def location_changed(self, location):
-        pass
+        settings.write_to_config("locationCode", dma_grabber.get_ids()[location])
         # TODO: Write location code with index of dma_grabber.get_ids() to
         # resources/config.json
 
