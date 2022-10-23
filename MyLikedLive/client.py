@@ -28,6 +28,12 @@ class MainWindow(QMainWindow):
         self.Stack.addWidget(self.stack3)
         self.Stack.setCurrentIndex(2)
 
+    def location_changed(self, location):
+        pass
+        # TODO: Write location code with index of dma_grabber.get_ids() to
+        # resources/config.json
+
+
 
     # Makes a generic QWidget into a login window
     def make_login_window(self, stack):
@@ -40,6 +46,7 @@ class MainWindow(QMainWindow):
         stack.location_instructions.setText("Choose your location:")
         stack.location_dropdown = QComboBox()
         stack.location_dropdown.addItems(loc for loc in dma_grabber.get_locations())
+        stack.location_dropdown.currentTextChanged.connect(self.location_changed)
         stack.continue_button = QPushButton("Continue")
         stack.continue_button.setEnabled(False)
         stack.continue_button.clicked.connect((lambda: self.Stack.setCurrentIndex(1)))
@@ -87,6 +94,9 @@ class MainWindow(QMainWindow):
         self.Stack = QStackedWidget()
         self.Stack.addWidget(self.stack1)
         self.Stack.addWidget(self.stack2)
+
+        # TODO: Check resources/config.json and set default value for the
+        # QComboBox self.stack1.location_dropdown
 
         # If .cache exists, the user is already logged in
         if os.path.exists(".cache"):
