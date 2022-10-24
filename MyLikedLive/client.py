@@ -1,3 +1,4 @@
+#TODO: Make prompt screen show recent artists instead of results
 from spotify_scraper import SpotifyScraper
 from utils import dma_grabber, settings
 from PyQt6.QtWidgets import (
@@ -73,12 +74,16 @@ class MainWindow(QMainWindow):
 
     # Makes a generic QWidget into a results window
     def make_results_window(self, stack):
+        recent_artists = "Lately, you've been listening to:\n" + ", ".join(self.ss.unique_artists)
+        stack.artist_label = QLabel(recent_artists)
+        stack.artist_label.setWordWrap(True)
         results = ""
         for concert_list in self.ss.all_concerts:
             results += str(concert_list) + "\n"
-        stack.label = QLabel(results)
+        stack.concert_label = QLabel(results)
         layout = QVBoxLayout()
-        layout.addWidget(stack.label)
+        layout.addWidget(stack.artist_label)
+        layout.addWidget(stack.concert_label)
         stack.setLayout(layout)
         return stack
 
@@ -110,16 +115,3 @@ app = QApplication([])
 ex = MainWindow()
 ex.show()
 app.exec()
-
-#print()
-#print("Lately, you've been listening to: ")
-#print(", ".join(ss.unique_artists))
-#print()
-
-#print("Searching for local concerts from these artists...\n")
-
-
-#print("\n")
-#for concert in ss.all_concerts:
-#    print(concert)
-#print()
