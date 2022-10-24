@@ -75,6 +75,7 @@ class SpotifyScraper:
         self.loading_bar = loading_bar
         self.gather_settings()
         self.create_spotify_instance()
+        self.gather_recently_played()
 
     def get_username(self):
         return self.sp.current_user()["id"]
