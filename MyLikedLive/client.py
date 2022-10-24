@@ -21,10 +21,12 @@ class MainWindow(QMainWindow):
         self.ss = SpotifyScraper()
         self.stack1.user_label.setText("You're logged in as: " + self.ss.get_username())
         self.stack1.continue_button.setEnabled(True)
+        self.stack2 = self.make_prompt_window(QWidget())
+        self.Stack.addWidget(self.stack2)
+
 
     # Moves to results page from prompt page
     def proceed_to_results(self):
-        self.ss.gather_recently_played()
         self.ss.find_artist_concerts()
         self.stack3 = self.make_results_window(QWidget())
         self.Stack.addWidget(self.stack3)
@@ -62,11 +64,15 @@ class MainWindow(QMainWindow):
 
     # Makes a generic QWidget into a prompt window
     def make_prompt_window(self, stack):
+        recent_artists = "Lately, you've been listening to:\n" + ", ".join(self.ss.unique_artists)
+        stack.artist_label = QLabel(recent_artists)
+        stack.artist_label.setWordWrap(True)
         stack.results_button = QPushButton("Get local concerts")
         stack.results_button.clicked.connect(self.proceed_to_results)
         stack.back_button = QPushButton("Back to login")
         stack.back_button.clicked.connect((lambda: self.Stack.setCurrentIndex(0)))
         layout = QVBoxLayout()
+        layout.addWidget(stack.artist_label)
         layout.addWidget(stack.results_button)
         layout.addWidget(stack.back_button)
         stack.setLayout(layout)
@@ -74,15 +80,11 @@ class MainWindow(QMainWindow):
 
     # Makes a generic QWidget into a results window
     def make_results_window(self, stack):
-        recent_artists = "Lately, you've been listening to:\n" + ", ".join(self.ss.unique_artists)
-        stack.artist_label = QLabel(recent_artists)
-        stack.artist_label.setWordWrap(True)
         results = ""
         for concert_list in self.ss.all_concerts:
             results += str(concert_list) + "\n"
         stack.concert_label = QLabel(results)
         layout = QVBoxLayout()
-        layout.addWidget(stack.artist_label)
         layout.addWidget(stack.concert_label)
         stack.setLayout(layout)
         return stack
@@ -91,17 +93,18 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("My Liked, Live")
+        self.resize(QSize(100, 400))
 
         self.stack1 = self.make_login_window(QWidget())
-        self.stack2 = self.make_prompt_window(QWidget())
 
         self.Stack = QStackedWidget()
         self.Stack.addWidget(self.stack1)
-        self.Stack.addWidget(self.stack2)
 
         # If .cache exists, the user is already logged in
         if os.path.exists(".cache"):
             self.ss = SpotifyScraper()
+            self.stack2 = self.make_prompt_window(QWidget())
+            self.Stack.addWidget(self.stack2)
             self.Stack.setCurrentIndex(1)
             self.stack1.user_label.setText("You're logged in as: " + self.ss.get_username())
             self.stack1.continue_button.setEnabled(True)
