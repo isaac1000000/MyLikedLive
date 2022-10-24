@@ -68,6 +68,8 @@ class SpotifyScraper:
             if self.loading_bar:
                 progress += 1/len(self.unique_artists)
                 print("{:-<30}".format("\r|" + "█"*int(progress*30)) + "|", end="")
+        if not self.all_concerts:
+            all_concerts.append("No concerts found")
 
     def __init__(self, loading_bar=False):
         self.loading_bar = loading_bar
