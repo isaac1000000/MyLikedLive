@@ -22,15 +22,19 @@ class MainWindow(QMainWindow):
         self.ss = SpotifyScraper()
         self.login_window.user_label.setText("You're logged in as: " + self.ss.get_username())
         self.login_window.continue_button.setEnabled(True)
+        if not self.prompt_window == None:
+            self.window_stack.removeWidget(self.prompt_window)
         self.prompt_window = self.make_prompt_window(QWidget())
-        self.window_stack.addWidget(self.prompt_window)
+        self.window_stack.insertWidget(1, self.prompt_window)
 
 
     # Moves to results page from prompt page
     def proceed_to_results(self):
         self.ss.find_artist_concerts()
+        if not self.results_window == None:
+            self.window_stack.removeWidget(self.results_window)
         self.results_window = self.make_results_window(QWidget())
-        self.window_stack.addWidget(self.results_window)
+        self.window_stack.insertWidget(2, self.results_window)
         self.window_stack.setCurrentIndex(2)
 
     # Changes the value stored in locationCode in resources/config.json
@@ -97,6 +101,8 @@ class MainWindow(QMainWindow):
         self.resize(QSize(100, 400))
 
         self.login_window = self.make_login_window(QWidget())
+        self.prompt_window = None
+        self.results_window = None
 
         self.window_stack = QStackedWidget()
         self.window_stack.addWidget(self.login_window)
