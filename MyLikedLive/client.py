@@ -1,4 +1,5 @@
-#TODO: Make prompt screen show recent artists instead of results
+#TODO: add button to go from results to login page (should be easy since login
+    # and prompt already create a new window)
 from spotify_scraper import SpotifyScraper
 from utils import dma_grabber, settings
 from PyQt6.QtWidgets import (
@@ -19,75 +20,75 @@ class MainWindow(QMainWindow):
         if os.path.exists(".cache"):
             os.remove(".cache")
         self.ss = SpotifyScraper()
-        self.stack1.user_label.setText("You're logged in as: " + self.ss.get_username())
-        self.stack1.continue_button.setEnabled(True)
-        self.stack2 = self.make_prompt_window(QWidget())
-        self.Stack.addWidget(self.stack2)
+        self.login_window.user_label.setText("You're logged in as: " + self.ss.get_username())
+        self.login_window.continue_button.setEnabled(True)
+        self.prompt_window = self.make_prompt_window(QWidget())
+        self.window_stack.addWidget(self.prompt_window)
 
 
     # Moves to results page from prompt page
     def proceed_to_results(self):
         self.ss.find_artist_concerts()
-        self.stack3 = self.make_results_window(QWidget())
-        self.Stack.addWidget(self.stack3)
-        self.Stack.setCurrentIndex(2)
+        self.results_window = self.make_results_window(QWidget())
+        self.window_stack.addWidget(self.results_window)
+        self.window_stack.setCurrentIndex(2)
 
     # Changes the value stored in locationCode in resources/config.json
     def location_changed(self, location):
         settings.write_to_config("locationCode", dma_grabber.get_ids()[location])
 
     # Makes a generic QWidget into a login window
-    def make_login_window(self, stack):
-        stack.instruction_label = QLabel()
-        stack.instruction_label.setText("Press the button to connect to spotify")
-        stack.connect_button = QPushButton("Connect to spotify")
-        stack.connect_button.clicked.connect(self.login)
-        stack.user_label = QLabel()
-        stack.location_instructions = QLabel()
-        stack.location_instructions.setText("Choose your location:")
-        stack.location_dropdown = QComboBox()
-        stack.location_dropdown.addItems(loc for loc in dma_grabber.get_locations())
-        stack.location_dropdown.setCurrentText(dma_grabber.get_location(settings.get_location_code()))
-        stack.location_dropdown.currentTextChanged.connect(self.location_changed)
-        stack.continue_button = QPushButton("Continue")
-        stack.continue_button.setEnabled(False)
-        stack.continue_button.clicked.connect((lambda: self.Stack.setCurrentIndex(1)))
+    def make_login_window(self, window):
+        window.instruction_label = QLabel()
+        window.instruction_label.setText("Press the button to connect to spotify")
+        window.connect_button = QPushButton("Connect to spotify")
+        window.connect_button.clicked.connect(self.login)
+        window.user_label = QLabel()
+        window.location_instructions = QLabel()
+        window.location_instructions.setText("Choose your location:")
+        window.location_dropdown = QComboBox()
+        window.location_dropdown.addItems(loc for loc in dma_grabber.get_locations())
+        window.location_dropdown.setCurrentText(dma_grabber.get_location(settings.get_location_code()))
+        window.location_dropdown.currentTextChanged.connect(self.location_changed)
+        window.continue_button = QPushButton("Continue")
+        window.continue_button.setEnabled(False)
+        window.continue_button.clicked.connect((lambda: self.window_stack.setCurrentIndex(1)))
         layout = QVBoxLayout()
-        layout.addWidget(stack.instruction_label)
-        layout.addWidget(stack.connect_button)
-        layout.addWidget(stack.user_label)
-        layout.addWidget(stack.location_instructions)
-        layout.addWidget(stack.location_dropdown)
-        layout.addWidget(stack.continue_button)
-        stack.setLayout(layout)
-        return stack
+        layout.addWidget(window.instruction_label)
+        layout.addWidget(window.connect_button)
+        layout.addWidget(window.user_label)
+        layout.addWidget(window.location_instructions)
+        layout.addWidget(window.location_dropdown)
+        layout.addWidget(window.continue_button)
+        window.setLayout(layout)
+        return window
 
     # Makes a generic QWidget into a prompt window
-    def make_prompt_window(self, stack):
+    def make_prompt_window(self, window):
         recent_artists = "Lately, you've been listening to:\n" + ", ".join(self.ss.unique_artists)
-        stack.artist_label = QLabel(recent_artists)
-        stack.artist_label.setWordWrap(True)
-        stack.results_button = QPushButton("Get local concerts")
-        stack.results_button.clicked.connect(self.proceed_to_results)
-        stack.back_button = QPushButton("Back to login")
-        stack.back_button.clicked.connect((lambda: self.Stack.setCurrentIndex(0)))
+        window.artist_label = QLabel(recent_artists)
+        window.artist_label.setWordWrap(True)
+        window.results_button = QPushButton("Get local concerts")
+        window.results_button.clicked.connect(self.proceed_to_results)
+        window.back_button = QPushButton("Back to login")
+        window.back_button.clicked.connect((lambda: self.window_stack.setCurrentIndex(0)))
         layout = QVBoxLayout()
-        layout.addWidget(stack.artist_label)
-        layout.addWidget(stack.results_button)
-        layout.addWidget(stack.back_button)
-        stack.setLayout(layout)
-        return stack
+        layout.addWidget(window.artist_label)
+        layout.addWidget(window.results_button)
+        layout.addWidget(window.back_button)
+        window.setLayout(layout)
+        return window
 
     # Makes a generic QWidget into a results window
-    def make_results_window(self, stack):
+    def make_results_window(self, window):
         results = ""
         for concert_list in self.ss.all_concerts:
             results += str(concert_list) + "\n"
-        stack.concert_label = QLabel(results)
+        window.concert_label = QLabel(results)
         layout = QVBoxLayout()
-        layout.addWidget(stack.concert_label)
-        stack.setLayout(layout)
-        return stack
+        layout.addWidget(window.concert_label)
+        window.setLayout(layout)
+        return window
 
     def __init__(self):
         super().__init__()
@@ -95,23 +96,23 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("My Liked, Live")
         self.resize(QSize(100, 400))
 
-        self.stack1 = self.make_login_window(QWidget())
+        self.login_window = self.make_login_window(QWidget())
 
-        self.Stack = QStackedWidget()
-        self.Stack.addWidget(self.stack1)
+        self.window_stack = QStackedWidget()
+        self.window_stack.addWidget(self.login_window)
 
         # If .cache exists, the user is already logged in
         if os.path.exists(".cache"):
             self.ss = SpotifyScraper()
-            self.stack2 = self.make_prompt_window(QWidget())
-            self.Stack.addWidget(self.stack2)
-            self.Stack.setCurrentIndex(1)
-            self.stack1.user_label.setText("You're logged in as: " + self.ss.get_username())
-            self.stack1.continue_button.setEnabled(True)
+            self.prompt_window = self.make_prompt_window(QWidget())
+            self.window_stack.addWidget(self.prompt_window)
+            self.window_stack.setCurrentIndex(1)
+            self.login_window.user_label.setText("You're logged in as: " + self.ss.get_username())
+            self.login_window.continue_button.setEnabled(True)
         else:
-            self.Stack.setCurrentIndex(0)
+            self.window_stack.setCurrentIndex(0)
 
-        self.setCentralWidget(self.Stack)
+        self.setCentralWidget(self.window_stack)
 
 
 app = QApplication([])
