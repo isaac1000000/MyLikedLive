@@ -1,5 +1,5 @@
 # A set of custom exceptions to help with error handling
-# Isaac Fisher 10.19.2022
+# Isaac Fisher
 class FailedToAuthorizeException(Exception):
     def __init__(self, endpoint="Generic"):
         self.endpoint = endpoint

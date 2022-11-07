@@ -1,5 +1,9 @@
 # The main class and GUI/process handler
-# Isaac Fisher 11.6.22
+# Isaac Fisher
+
+#TODO: nicer looking gui, colors/arrangements
+#TODO: transition to songkick api when they start taking applications
+#TODO: consider in-client error handling, but not too bad as is
 from spotify_scraper import SpotifyScraper
 from utils import dma_grabber, settings
 from PyQt6.QtWidgets import (
