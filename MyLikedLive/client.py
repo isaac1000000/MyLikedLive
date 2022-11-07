@@ -1,3 +1,5 @@
+# The main class and GUI/process handler
+# Isaac Fisher 11.6.22
 from spotify_scraper import SpotifyScraper
 from utils import dma_grabber, settings
 from PyQt6.QtWidgets import (
@@ -12,6 +14,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import QSize
 import os.path
 
+# GUI Creation
 class MainWindow(QMainWindow):
     # Initiates login process when login button is pressed
     def login(self):
@@ -121,8 +124,8 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(self.window_stack)
 
-
-app = QApplication([])
-ex = MainWindow()
-ex.show()
-app.exec()
+if __name__ == "__main__":
+    app = QApplication([])
+    ex = MainWindow()
+    ex.show()
+    app.exec()
