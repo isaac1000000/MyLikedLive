@@ -1,5 +1,3 @@
-#TODO: add button to go from results to login page (should be easy since login
-    # and prompt already create a new window)
 from spotify_scraper import SpotifyScraper
 from utils import dma_grabber, settings
 from PyQt6.QtWidgets import (
@@ -89,8 +87,11 @@ class MainWindow(QMainWindow):
         for concert_list in self.ss.all_concerts:
             results += str(concert_list) + "\n"
         window.concert_label = QLabel(results)
+        window.back_button = QPushButton("Back to login")
+        window.back_button.clicked.connect((lambda: self.window_stack.setCurrentIndex(0)))
         layout = QVBoxLayout()
         layout.addWidget(window.concert_label)
+        layout.addWidget(window.back_button)
         window.setLayout(layout)
         return window
 
