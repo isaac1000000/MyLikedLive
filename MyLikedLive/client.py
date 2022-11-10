@@ -12,6 +12,7 @@ from PyQt6.QtWidgets import (
     QLabel,
     QComboBox,
     QVBoxLayout,
+    QGridLayout,
     QWidget,
     QPushButton,
     QStackedWidget)
@@ -48,27 +49,26 @@ class MainWindow(QMainWindow):
 
     # Makes a generic QWidget into a login window
     def make_login_window(self, window):
-        window.instruction_label = QLabel()
-        window.instruction_label.setText("Press the button to connect to spotify")
-        window.connect_button = QPushButton("Connect to spotify")
+        window.greeting_label = QLabel()
+        window.greeting_label.setText("Your Liked, Live")
+        window.greeting_label.setStyleSheet("font-weight: bold; font-size: 25px")
+        window.connect_button = QPushButton("Connect to Spotify")
         window.connect_button.clicked.connect(self.login)
         window.user_label = QLabel()
-        window.location_instructions = QLabel()
-        window.location_instructions.setText("Choose your location:")
         window.location_dropdown = QComboBox()
         window.location_dropdown.addItems(loc for loc in dma_grabber.get_locations())
         window.location_dropdown.setCurrentText(dma_grabber.get_location(settings.get_location_code()))
         window.location_dropdown.currentTextChanged.connect(self.location_changed)
+        window.location_dropdown.setFixedWidth(300)
         window.continue_button = QPushButton("Continue")
         window.continue_button.setEnabled(False)
         window.continue_button.clicked.connect((lambda: self.window_stack.setCurrentIndex(1)))
-        layout = QVBoxLayout()
-        layout.addWidget(window.instruction_label)
-        layout.addWidget(window.connect_button)
-        layout.addWidget(window.user_label)
-        layout.addWidget(window.location_instructions)
-        layout.addWidget(window.location_dropdown)
-        layout.addWidget(window.continue_button)
+        layout = QGridLayout()
+        layout.addWidget(window.greeting_label, 0, 1)
+        layout.addWidget(window.connect_button, 1, 1)
+        layout.addWidget(window.user_label, 2, 2)
+        layout.addWidget(window.location_dropdown, 2, 0, 1, 2)
+        layout.addWidget(window.continue_button, 3, 2)
         window.setLayout(layout)
         return window
 
@@ -81,10 +81,10 @@ class MainWindow(QMainWindow):
         window.results_button.clicked.connect(self.proceed_to_results)
         window.back_button = QPushButton("Back to login")
         window.back_button.clicked.connect((lambda: self.window_stack.setCurrentIndex(0)))
-        layout = QVBoxLayout()
-        layout.addWidget(window.artist_label)
-        layout.addWidget(window.results_button)
-        layout.addWidget(window.back_button)
+        layout = QGridLayout()
+        layout.addWidget(window.artist_label, 0, 0, 1, 0)
+        layout.addWidget(window.results_button, 1, 1)
+        layout.addWidget(window.back_button, 1, 0)
         window.setLayout(layout)
         return window
 
@@ -96,9 +96,9 @@ class MainWindow(QMainWindow):
         window.concert_label = QLabel(results)
         window.back_button = QPushButton("Back to login")
         window.back_button.clicked.connect((lambda: self.window_stack.setCurrentIndex(0)))
-        layout = QVBoxLayout()
-        layout.addWidget(window.concert_label)
-        layout.addWidget(window.back_button)
+        layout = QGridLayout()
+        layout.addWidget(window.concert_label, 0, 0, 2, 0)
+        layout.addWidget(window.back_button, 1, 2)
         window.setLayout(layout)
         return window
 
@@ -131,5 +131,16 @@ class MainWindow(QMainWindow):
 if __name__ == "__main__":
     app = QApplication([])
     ex = MainWindow()
+
+    app.setStyleSheet("""
+    QWidget {
+        background-color: "black";
+        color: "green";
+    }
+    QComboBox {
+        border: 1px solid gray;
+    }
+    """)
+
     ex.show()
     app.exec()
