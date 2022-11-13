@@ -1,8 +1,9 @@
 # A set of functions to help with making the gui look pretty
 
-# Returns a string of the list in the desired style
+# The number of characters in a line
 line_length = 67
 
+# Changes a list into a string of proper style
 def list_styling(l):
     result = [""]
     for item in l:
@@ -18,6 +19,4 @@ def list_styling(l):
             result[-1] = result[-1][:-2]
             result += [item + ", "]
     result[-1] = result[-1][:-2]
-
-
     return ">>> " + "\n>>> ".join(result)
