@@ -1,5 +1,4 @@
 # Authenticates spotify, gathers recent artists, and finds relevant concerts
-# Isaac Fisher
 
 import spotipy
 from spotipy.oauth2 import SpotifyPKCE
@@ -62,9 +61,10 @@ class SpotifyScraper:
         self.all_concerts = []
         # Iterates through artists to check for applicable concerts then prints
         for artist in self.unique_artists:
-            concerts = ConcertLocator(artist, self.location)
-            if concerts.exists():
-                self.all_concerts.append(concerts)
+            concerts = ConcertLocator(artist, self.location).to_list()
+            if concerts:
+                for concert in concerts:
+                    self.all_concerts.append(concert)
             if self.loading_bar:
                 progress += 1/len(self.unique_artists)
                 print("{:-<30}".format("\r|" + "█"*int(progress*30)) + "|", end="")

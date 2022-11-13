@@ -1,5 +1,4 @@
 # Defines functionality to parse websites for concert information
-# Isaac Fisher
 
 import requests
 import json
@@ -81,14 +80,17 @@ class ConcertLocator:
         else:
             return False
 
-    # toString method for output
-    def __str__(self):
+    def to_list(self):
         if self.exists():
             result_list = []
             for concert in self.relevant_concerts:
                 result_list.append("[{artist}]: {name} is playing at the venue \"{venue}\""
                 " on {date}".format(artist=self.artist, name=concert["name"],
                 venue=concert["venue"], date=concert["date"]))
-            return "\n".join(result_list)
+            return result_list
         else:
-            return ""
+            return []
+
+    # toString method for output
+    def __str__(self):
+        return "\n".join(self.to_string())

@@ -1,5 +1,5 @@
 # Useful methods for working with the DMA information in resources/DMAIDs.csv
-# Isaac Fisher
+
 import csv
 import os.path
 
