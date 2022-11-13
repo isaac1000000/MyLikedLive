@@ -1,5 +1,5 @@
 # A set of useful methods for working with resources/settings.json
-# Isaac Fisher
+
 import json
 import os.path
 

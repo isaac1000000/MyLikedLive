@@ -1,5 +1,4 @@
 # Authenticates spotify, gathers recent artists, and finds relevant concerts
-# Isaac Fisher
 
 import spotipy
 from spotipy.oauth2 import SpotifyPKCE

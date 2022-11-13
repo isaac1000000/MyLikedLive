@@ -1,22 +1,19 @@
 # The main class and GUI/process handler
-# Isaac Fisher
 
-#TODO: nicer looking gui, colors/arrangements
 #TODO: transition to songkick api when they start taking applications
 #TODO: consider in-client error handling, but not too bad as is
 from spotify_scraper import SpotifyScraper
-from utils import dma_grabber, settings
+from utils import dma_grabber, settings, gui_tools
 from PyQt6.QtWidgets import (
     QApplication,
     QMainWindow,
     QLabel,
     QComboBox,
-    QVBoxLayout,
     QGridLayout,
     QWidget,
     QPushButton,
     QStackedWidget)
-from PyQt6.QtCore import QSize
+from PyQt6.QtCore import Qt, QSize
 import os.path
 
 # GUI Creation
@@ -26,7 +23,7 @@ class MainWindow(QMainWindow):
         if os.path.exists(".cache"):
             os.remove(".cache")
         self.ss = SpotifyScraper()
-        self.login_window.user_label.setText("You're logged in as: " + self.ss.get_username())
+        self.login_window.user_label.setText(">>> You're logged in as: " + self.ss.get_username())
         self.login_window.continue_button.setEnabled(True)
         if not self.prompt_window == None:
             self.window_stack.removeWidget(self.prompt_window)
@@ -50,36 +47,36 @@ class MainWindow(QMainWindow):
     # Makes a generic QWidget into a login window
     def make_login_window(self, window):
         window.greeting_label = QLabel()
-        window.greeting_label.setText("Your Liked, Live")
+        window.greeting_label.setText(">>> Your Liked, Live")
         window.greeting_label.setStyleSheet("font-weight: bold; font-size: 25px")
-        window.connect_button = QPushButton("Connect to Spotify")
+        window.connect_button = QPushButton("[Connect to Spotify]")
         window.connect_button.clicked.connect(self.login)
         window.user_label = QLabel()
         window.location_dropdown = QComboBox()
         window.location_dropdown.addItems(loc for loc in dma_grabber.get_locations())
         window.location_dropdown.setCurrentText(dma_grabber.get_location(settings.get_location_code()))
         window.location_dropdown.currentTextChanged.connect(self.location_changed)
-        window.location_dropdown.setFixedWidth(300)
-        window.continue_button = QPushButton("Continue")
+        window.location_dropdown.setFixedWidth(275)
+        window.continue_button = QPushButton("[Continue]")
         window.continue_button.setEnabled(False)
         window.continue_button.clicked.connect((lambda: self.window_stack.setCurrentIndex(1)))
         layout = QGridLayout()
-        layout.addWidget(window.greeting_label, 0, 1)
+        layout.addWidget(window.greeting_label, 0, 0, 1, 3, alignment=Qt.AlignmentFlag.AlignHCenter)
         layout.addWidget(window.connect_button, 1, 1)
-        layout.addWidget(window.user_label, 2, 2)
+        layout.addWidget(window.user_label, 1, 2)
         layout.addWidget(window.location_dropdown, 2, 0, 1, 2)
-        layout.addWidget(window.continue_button, 3, 2)
+        layout.addWidget(window.continue_button, 2, 2)
         window.setLayout(layout)
         return window
 
     # Makes a generic QWidget into a prompt window
     def make_prompt_window(self, window):
-        recent_artists = "Lately, you've been listening to:\n" + ", ".join(self.ss.unique_artists)
+        recent_artists = "Lately, you've been listening to:\n" + gui_tools.list_styling(self.ss.unique_artists)
         window.artist_label = QLabel(recent_artists)
         window.artist_label.setWordWrap(True)
-        window.results_button = QPushButton("Get local concerts")
+        window.results_button = QPushButton("[Get local concerts]")
         window.results_button.clicked.connect(self.proceed_to_results)
-        window.back_button = QPushButton("Back to login")
+        window.back_button = QPushButton("[Back to login]")
         window.back_button.clicked.connect((lambda: self.window_stack.setCurrentIndex(0)))
         layout = QGridLayout()
         layout.addWidget(window.artist_label, 0, 0, 1, 0)
@@ -94,7 +91,7 @@ class MainWindow(QMainWindow):
         for concert_list in self.ss.all_concerts:
             results += str(concert_list) + "\n"
         window.concert_label = QLabel(results)
-        window.back_button = QPushButton("Back to login")
+        window.back_button = QPushButton("[Back to login]")
         window.back_button.clicked.connect((lambda: self.window_stack.setCurrentIndex(0)))
         layout = QGridLayout()
         layout.addWidget(window.concert_label, 0, 0, 2, 0)
@@ -106,7 +103,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("My Liked, Live")
-        self.resize(QSize(100, 400))
+        self.resize(QSize(480, 400))
 
         self.login_window = self.make_login_window(QWidget())
         self.prompt_window = None
@@ -121,7 +118,7 @@ class MainWindow(QMainWindow):
             self.prompt_window = self.make_prompt_window(QWidget())
             self.window_stack.addWidget(self.prompt_window)
             self.window_stack.setCurrentIndex(1)
-            self.login_window.user_label.setText("You're logged in as: " + self.ss.get_username())
+            self.login_window.user_label.setText(">>> Logged in as: " + self.ss.get_username()[:10])
             self.login_window.continue_button.setEnabled(True)
         else:
             self.window_stack.setCurrentIndex(0)
@@ -138,9 +135,14 @@ if __name__ == "__main__":
         color: "green";
     }
     QComboBox {
-        border: 1px solid gray;
+        border: 1px solid green;
+    }
+    QPushButton {
+        border: .5px solid green;
     }
     """)
+
+    print(ex.size())
 
     ex.show()
     app.exec()

@@ -1,5 +1,4 @@
 # Defines functionality to parse websites for concert information
-# Isaac Fisher
 
 import requests
 import json
