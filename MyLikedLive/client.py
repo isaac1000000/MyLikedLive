@@ -11,6 +11,7 @@ from PyQt6.QtWidgets import (
     QComboBox,
     QGridLayout,
     QWidget,
+    QSpacerItem,
     QPushButton,
     QStackedWidget)
 from PyQt6.QtCore import Qt, QSize
@@ -93,7 +94,8 @@ class MainWindow(QMainWindow):
         window.back_button.clicked.connect((lambda: self.window_stack.setCurrentIndex(0)))
         layout = QGridLayout()
         layout.addWidget(window.concert_label, 0, 0, 2, 0)
-        layout.addWidget(window.back_button, 1, 2)
+        layout.addWidget(QLabel(), 1, 1)
+        layout.addWidget(window.back_button, 1, 0)
         window.setLayout(layout)
         return window
 
