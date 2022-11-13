@@ -87,9 +87,7 @@ class MainWindow(QMainWindow):
 
     # Makes a generic QWidget into a results window
     def make_results_window(self, window):
-        results = ""
-        for concert_list in self.ss.all_concerts:
-            results += str(concert_list) + "\n"
+        results = gui_tools.list_styling(self.ss.all_concerts)
         window.concert_label = QLabel(results)
         window.back_button = QPushButton("[Back to login]")
         window.back_button.clicked.connect((lambda: self.window_stack.setCurrentIndex(0)))
@@ -141,8 +139,6 @@ if __name__ == "__main__":
         border: .5px solid green;
     }
     """)
-
-    print(ex.size())
 
     ex.show()
     app.exec()
